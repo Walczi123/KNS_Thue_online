@@ -14,7 +14,7 @@ namespace ThueOnline.Game
         public Alphabet(int size)
         {
             this.Letters = new List<char>();
-            for(int i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
                 this.Letters.Add((char)('A' + i));
             }
@@ -34,6 +34,6 @@ namespace ThueOnline.Game
             }
             Console.WriteLine();
         }
-           
+
     }
 }

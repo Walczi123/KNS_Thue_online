@@ -53,12 +53,12 @@ namespace ThueOnline.Game
 
         private bool IsRepetiton(string word)
         {
-            for(int i=1; i<=word.Length/2; i++)
-            {   
-                for(int j = 0; j <= word.Length - (2*i); j++)
+            for (int i = 1; i <= word.Length / 2; i++)
+            {
+                for (int j = 0; j <= word.Length - (2 * i); j++)
                 {
                     var firstPart = word.Substring(j, i);
-                    var secondPart = word.Substring(j+i, i);
+                    var secondPart = word.Substring(j + i, i);
                     if (String.Equals(firstPart, secondPart))
                     {
                         Console.WriteLine("Repetition found");
@@ -91,8 +91,8 @@ namespace ThueOnline.Game
                 if (line.Length > 0)
                 {
                     line = line.ToUpper();
-                    letter = line.ToCharArray()[0];               
-                }                  
+                    letter = line.ToCharArray()[0];
+                }
             }
             this.word = ReplaceSymbol(this.currentPosiotion, letter);
         }

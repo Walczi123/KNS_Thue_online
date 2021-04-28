@@ -1,4 +1,6 @@
 ﻿using System;
+using Thue_online.AI;
+using Thue_online.Extensions;
 
 namespace ThueOnline.Game
 {
@@ -12,14 +14,15 @@ namespace ThueOnline.Game
         int limit;
         int currentPosiotion = 0;
         string inputSymbol = "_";
-        bool randomAI = false;
-        Random random = new Random();
+
+        IArtificialIntelligence AI;
 
         #endregion
 
         #region Public Methods
-        public ThueGame(Alphabet alphabet, int limit)
+        public ThueGame(Alphabet alphabet, int limit, IArtificialIntelligence artificialIntelligence)
         {
+            this.AI = artificialIntelligence;
             this.alphabet = alphabet;
             this.limit = limit;
             this.alphabet.Print();
@@ -31,8 +34,7 @@ namespace ThueOnline.Game
             while (!this.IsRepetiton(this.word) &&
                 this.word.Length < this.limit)
             {
-                if (this.randomAI) RandomComputerMove();
-                else LessDummyComputerMove();
+                ComputerMove();
                 this.word = InsertSymbol(this.currentPosiotion, this.inputSymbol);
                 PrintWord();
                 PlayerMove();
@@ -55,42 +57,14 @@ namespace ThueOnline.Game
 
         public bool IsRepetiton(string word)
         {
-            for (int i = 1; i <= word.Length / 2; i++)
+            if (word.HasRepetition())
             {
-                for (int j = 0; j <= word.Length - (2 * i); j++)
-                {
-                    var firstPart = word.Substring(j, i);
-                    var secondPart = word.Substring(j + i, i);
-                    if (String.Equals(firstPart, secondPart))
-                    {
-                        Console.WriteLine("Repetition found");
-                        Console.WriteLine($"Frist: {firstPart}");
-                        Console.WriteLine($"Second: {secondPart}");
-                        this.winner = Winner.Computer;
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private int RepetitonProbabilities(string word)
-        {
-            for (int i = 1; i <= word.Length / 2; i++)
-            {
-                for (int j = 0; j <= word.Length - (2 * i); j++)
-                {
-                    var firstPart = word.Substring(j, i);
-                    var secondPart = word.Substring(j + i, i);
-                    if (String.Equals(firstPart, secondPart))
-                    {
-                        Console.WriteLine("Repetition found");
-                        Console.WriteLine($"Frist: {firstPart}");
-                        Console.WriteLine($"Second: {secondPart}");
-                        this.winner = Winner.Computer;
-                        return true;
-                    }
-                }
+                var (firstPart, secondPart) = word.FindRepetition();
+                Console.WriteLine("Repetition found");
+                Console.WriteLine($"Frist: {firstPart}");
+                Console.WriteLine($"Second: {secondPart}");
+                this.winner = Winner.Computer;
+                return true;
             }
             return false;
         }
@@ -120,16 +94,9 @@ namespace ThueOnline.Game
             this.word = ReplaceSymbol(this.currentPosiotion, letter);
         }
 
-        private void RandomComputerMove()
+        private void ComputerMove()
         {
-            int length = this.word.Length;
-            this.currentPosiotion = this.random.Next(0, length);
-        }
-
-
-        private void LessDummyComputerMove()
-        {
-
+            this.currentPosiotion = this.AI.MakeMove(word, alphabet, this.limit);
         }
 
         private string InsertSymbol(int position, string symbol)

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Thue_online.Extensions;
+using ThueOnline.Game;
 
-namespace ThueOnline.Game
+namespace Thue_online.AI
 {
-    public struct Move 
+    public struct Move
     {
         public int position;
         public char symbol;
@@ -36,9 +37,9 @@ namespace ThueOnline.Game
             this.visits = 0;
             this.parent = parent;
             this.state = state;
-            this.untriedMoves = this.GetAllPosibleMoves(alphabet, endCondition);
-            this.childNodes = new List<Node>();
             this.move = move;
+            this.untriedMoves = this.GetAllPosibleMoves(alphabet, endCondition);
+            this.childNodes = new List<Node>();      
         }
 
         private float GetUctScore()
@@ -85,13 +86,12 @@ namespace ThueOnline.Game
             List<Move> l = new List<Move>();
             if (this.state.Length >= endCondition || this.state.HasRepetition())
                 return l;
-            
+
             if (this.IsComputerMove())
             {
-                for (int i = 0; i < this.state.Count(); i++)
+                for (int i = 0; i < this.state.Count() + 1; i++)
                 {
-                    for (int j = 0; j < this.state.Length; j++)
-                        l.Add(new Move(i, inputSymbol));
+                    l.Add(new Move(i, inputSymbol));
                 }
             }
             else
@@ -112,7 +112,7 @@ namespace ThueOnline.Game
 
         public bool IsComputerMove()
         {
-            if (this.move.symbol == this.inputSymbol)
+            if (this.move.symbol != this.inputSymbol)
                 return true;
             return false;
         }
@@ -122,7 +122,7 @@ namespace ThueOnline.Game
             this.wins += result;
             this.visits += 1;
             if (this.parent != null)
-                this.parent.Backpropagation( - result);
+                this.parent.Backpropagation(-result);
         }
 
         public Move GetMove()
@@ -131,28 +131,34 @@ namespace ThueOnline.Game
         }
     }
 
-    public static class AI
+    public class ArtificialIntelligenceMCTS : IArtificialIntelligence
     {
-        public static string StateAfterMove(string state, Move move)
+        char inputSymbol = '_';
+        public ArtificialIntelligenceMCTS() { }
+        public string StateAfterMove(string state, Move move)
         {
-            return state.Insert(move.position, move.symbol.ToString());
+            if(move.symbol == inputSymbol)            
+                return state.Insert(move.position, move.symbol.ToString());
+            return state.Replace(inputSymbol, move.symbol);
         }
 
-        static int GetResult(bool hasRepetition, bool isComputerMove)
+        int GetResult(bool hasRepetition, bool isComputerMove)
         {
             if (hasRepetition && isComputerMove)
                 return 1;
             return 0;
         }
 
-        public static int MakeMove(string initialState, int numberOfIteration, Alphabet alphabet, int endCondition)
+        public int MakeMove(string initialState, Alphabet alphabet, int endCondition, int numberOfIteration)
         {
-            var rootnode = new Node(initialState, new Move(-1, '|'), alphabet, endCondition);
+            var rootnode = new Node(initialState, new Move(-1, '@'), alphabet, endCondition);
             Random random = new Random();
+            string iterationState;
+            Node node;
             for (int i = 0; i < numberOfIteration; i++)
             {
-                var node = rootnode;
-                string iterationState = node.state;
+                node = rootnode;
+                iterationState = node.state;
                 #region Selection
                 while (node.untriedMoves.Count == 0 && node.childNodes.Count != 0)
                 {
@@ -163,7 +169,7 @@ namespace ThueOnline.Game
                 if (node.untriedMoves.Any())
                 {
                     Move move = node.untriedMoves[random.Next(node.untriedMoves.Count)];
-                    iterationState = StateAfterMove(iterationState, move);
+                    iterationState = this.StateAfterMove(iterationState, move);
                     node = node.AddChild(iterationState, move, alphabet, endCondition);
                 }
                 #endregion
@@ -175,7 +181,7 @@ namespace ThueOnline.Game
                     if (allPosibleMoves.Any())
                     {
                         var move = allPosibleMoves[random.Next(allPosibleMoves.Count)];
-                        iterationState = StateAfterMove(iterationState, move);
+                        iterationState = this.StateAfterMove(iterationState, move);
                         playoutNode = new Node(iterationState, move, alphabet, endCondition);
                         continue;
                     }
@@ -183,7 +189,7 @@ namespace ThueOnline.Game
                 }
                 #endregion
                 #region Backpropagation
-                var result = GetResult(iterationState.HasRepetition(), node.IsComputerMove());
+                var result = this.GetResult(iterationState.HasRepetition(), node.IsComputerMove());
                 node.Backpropagation(result);
                 #endregion 
             }

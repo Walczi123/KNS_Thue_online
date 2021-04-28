@@ -12,6 +12,7 @@ namespace ThueOnline.Game
         int limit;
         int currentPosiotion = 0;
         string inputSymbol = "_";
+        bool randomAI = false;
         Random random = new Random();
 
         #endregion
@@ -30,7 +31,8 @@ namespace ThueOnline.Game
             while (!this.IsRepetiton(this.word) &&
                 this.word.Length < this.limit)
             {
-                ComputerMove();
+                if (this.randomAI) RandomComputerMove();
+                else LessDummyComputerMove();
                 this.word = InsertSymbol(this.currentPosiotion, this.inputSymbol);
                 PrintWord();
                 PlayerMove();
@@ -51,7 +53,28 @@ namespace ThueOnline.Game
 
         #region Private Methods
 
-        private bool IsRepetiton(string word)
+        public bool IsRepetiton(string word)
+        {
+            for (int i = 1; i <= word.Length / 2; i++)
+            {
+                for (int j = 0; j <= word.Length - (2 * i); j++)
+                {
+                    var firstPart = word.Substring(j, i);
+                    var secondPart = word.Substring(j + i, i);
+                    if (String.Equals(firstPart, secondPart))
+                    {
+                        Console.WriteLine("Repetition found");
+                        Console.WriteLine($"Frist: {firstPart}");
+                        Console.WriteLine($"Second: {secondPart}");
+                        this.winner = Winner.Computer;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private int RepetitonProbabilities(string word)
         {
             for (int i = 1; i <= word.Length / 2; i++)
             {
@@ -97,10 +120,16 @@ namespace ThueOnline.Game
             this.word = ReplaceSymbol(this.currentPosiotion, letter);
         }
 
-        private void ComputerMove()
+        private void RandomComputerMove()
         {
             int length = this.word.Length;
             this.currentPosiotion = this.random.Next(0, length);
+        }
+
+
+        private void LessDummyComputerMove()
+        {
+
         }
 
         private string InsertSymbol(int position, string symbol)

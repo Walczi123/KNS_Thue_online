@@ -45,6 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\ArtificialIntelligenceMCTS.cs" />
+    <Compile Include="AI\ArtificialIntelligenceRandom.cs" />
+    <Compile Include="AI\IArtificialIntelligence.cs" />
+    <Compile Include="Extensions\ExtensionMethods.cs" />
+    <Compile Include="Game\AI.cs" />
     <Compile Include="Game\ThueGame.cs" />
     <Compile Include="Game\Structures.cs" />
     <Compile Include="Program.cs" />

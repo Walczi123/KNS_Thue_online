@@ -43,7 +43,7 @@ namespace ThueOnline.Game
 
             if (this.winner.Equals(Winner.Player))
             {
-                Console.WriteLine("You win, Congratulation");
+                Console.WriteLine("You win, Congratulations!");
             }
             else
             {

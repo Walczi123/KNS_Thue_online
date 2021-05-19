@@ -12,15 +12,24 @@ namespace ThueOnline
             int wordSize = 0;
             while(true){
                 Console.WriteLine("How many letters in the alphabet?");
-                alphabetSize = Convert.ToInt32(Console.ReadLine());
-                if (alphabetSize <1) Console.WriteLine("It's too little. Choose again.");
+                try { 
+                    alphabetSize = Convert.ToInt32(Console.ReadLine()); 
+                }
+                catch { Console.WriteLine("This is not a number. Choose again.\n"); continue; }
+
+                if (alphabetSize > 26) Console.WriteLine("It's too much. Choose again.\n");
+                else if (alphabetSize <1) Console.WriteLine("It's too little. Choose again.\n");
                 else break;
             }
 
             while(true){
                 Console.WriteLine("How long the word has to be?");
-                wordSize = Convert.ToInt32(Console.ReadLine());
-                if (wordSize <2) Console.WriteLine("It's too little. Choose again.");
+                try { 
+                    wordSize = Convert.ToInt32(Console.ReadLine()); 
+                }
+                catch { Console.WriteLine("This is not a number. Choose again.\n"); continue; }
+
+                if (wordSize <2) Console.WriteLine("It's too little. Choose again.\n");
                 else break;
             }
             Console.WriteLine("\n\n");

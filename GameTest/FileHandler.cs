@@ -12,7 +12,7 @@ namespace GameTest
             Console.WriteLine("Please enter the input file path (default input.txt)");
             string input = Console.ReadLine();
             if (input == "")
-                filename = "input.txt";
+                filename = "../../../../input.txt";
             else
                 filename = input;
 
@@ -38,7 +38,7 @@ namespace GameTest
             Console.WriteLine("Please enter the output file path (default output.txt)");
             string output = Console.ReadLine();
             if (output == "")
-                filename = "output.txt";
+                filename = "../../../../output.txt";
             else
                 filename = output;
 

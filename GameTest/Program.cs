@@ -9,29 +9,47 @@ namespace GameTest
     {
         static void Main(string[] args)
         {
-            bool useGenerated = false;
             var instances = new List<GameInstance>();
 
-            Console.WriteLine("Would you like to generate a new input file? [y|n]");
-            var gen = Console.ReadLine();
-            if(gen == "y")
+            while(true)
             {
-                var generated = InputGenerator.GenerateInput();
-                Console.WriteLine("Would you like to use the generated instances? [y|n]");
-                useGenerated = Console.ReadLine() == "y" ? true : false;
-
-                if (useGenerated)
+                Console.WriteLine("Would you like to generate a new input file? [y|n]");
+                var gen = Console.ReadLine();
+                if (gen == "y")
                 {
-                    instances = generated;
+                    var generated = InputGenerator.GenerateInput();
+                    while(true)
+                    {
+                        Console.WriteLine("Would you like to use the generated instances? [y|n]");
+                        var generatedChar = Console.ReadLine();
+                        if(generatedChar == "y")
+                        {
+                            instances = generated;
+                            break;
+                        }
+                        else if (generatedChar == "n")
+                        {
+                            instances = FileHandler.ReadFile();
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Incorrect input - use generated");
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                else if (gen == "n")
+                {
+                    instances = FileHandler.ReadFile();
+                    break;
                 }
                 else
                 {
-                    instances = FileHandler.ReadFile();
+                    Console.WriteLine("Incorrect input - use generator");
+                    continue;
                 }
-            }
-            else
-            {
-                instances = FileHandler.ReadFile();
             }
 
             var results = new List<GameResult>();

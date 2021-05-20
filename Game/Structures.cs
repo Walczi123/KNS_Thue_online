@@ -39,6 +39,7 @@ namespace ThueOnline.Game
         {
             var rand = new Random();
             return Letters[rand.Next() % Letters.Count];
+
         }
     }
 }

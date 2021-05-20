@@ -25,16 +25,42 @@ namespace GameTest
                 var end = "n";
                 while (end != "y")
                 {
-                    Console.WriteLine("What should the size of the alphabet be?");
-                    var alph = Int32.Parse(Console.ReadLine());
-                    var alphabet = new Alphabet(alph);
+                    bool alphCheck = false;
+                    int alph = 0;
+                    Alphabet alphabet = new Alphabet(alph);
+                    while (!alphCheck)
+                    {
+                        Console.WriteLine("What should the size of the alphabet be?");
+                        alphCheck = Int32.TryParse(Console.ReadLine(), out alph);
+                        if (alphCheck)
+                            alphabet = new Alphabet(alph);
+                        else
+                            Console.WriteLine("Incorrect input - alphabet");
+                    }
 
-                    Console.WriteLine("What should the maximum length of the word be?");
-                    var length = Int32.Parse(Console.ReadLine());
+                    bool lengthCheck = false;
+                    int length = 0;
+                    while (!lengthCheck)
+                    {
+                        Console.WriteLine("What should the maximum length of the word be?");
+                        lengthCheck = Int32.TryParse(Console.ReadLine(), out length);
+                        if (!lengthCheck)
+                            Console.WriteLine("Incorrect input - length");
+                    }
 
                     var hand = "n";
-                    Console.WriteLine("Would you like to create the instance by hand? [y|n]");
-                    hand = Console.ReadLine();
+                    while (true)
+                    {
+                        Console.WriteLine("Would you like to create the instance by hand? [y|n]");
+                        hand = Console.ReadLine();
+                        if (hand == "n" || hand == "y")
+                            break;
+                        else
+                        {
+                            Console.WriteLine("Incorrect input - instance by hand");
+                            continue;
+                        }
+                    }
 
                     if (hand == "y")
                     {
@@ -44,7 +70,7 @@ namespace GameTest
                         {
                             Console.WriteLine("Please type in the sequence of characters");
                             seq = Console.ReadLine();
-                            if(seq.Length < length)
+                            if (seq.Length < length)
                             {
                                 Console.WriteLine("Invalid sequence! Too short");
                                 continue;
@@ -58,58 +84,123 @@ namespace GameTest
                         result.Add(res);
                         sw.WriteLine($"{alph}:{length}:{seq}");
 
-                        Console.WriteLine("Would you like to repeat this instance? [y|n]");
-                        if(Console.ReadLine() == "y")
+                        while (true)
                         {
-                            Console.WriteLine("How many times?");
-                            var times = Int32.Parse(Console.ReadLine());
-                            for(int i = 0; i < times; i++)
+                            Console.WriteLine("Would you like to repeat this instance? [y|n]");
+                            var repeat = Console.ReadLine();
+                            if (repeat == "y")
                             {
-                                result.Add(res);
-                                sw.WriteLine($"{alph}:{length}:{seq}");
+                                bool timesCheck = false;
+                                while (!timesCheck)
+                                {
+                                    int times = 0;
+                                    Console.WriteLine("How many times?");
+                                    timesCheck = Int32.TryParse(Console.ReadLine(), out times);
+                                    if (timesCheck)
+                                    {
+                                        for (int i = 0; i < times; i++)
+                                        {
+                                            result.Add(res);
+                                            sw.WriteLine($"{alph}:{length}:{seq}");
+                                        }
+                                    }
+                                    else
+                                        Console.WriteLine("Incorrect input - instance repeat number");
+                                }
+                                break;
                             }
+                            else if (repeat == "n")
+                                break;
+                            else if (repeat != "y" && repeat != "n")
+                            {
+                                Console.WriteLine("Incorrect input - instance repeat");
+                                continue;
+                            }
+
                         }
                     }
                     else
                     {
-                        Console.WriteLine("A sequence will be generated randomly. How many sequences should be generated?");
-                        var number = Int32.Parse(Console.ReadLine());
-                        if(number > 1)
+                        bool sequenceCheck = false;
+                        while(!sequenceCheck)
                         {
-                            for (int i = 0; i < number; i++)
+                            int number = 0;
+                            Console.WriteLine("A sequence will be generated randomly. How many sequences should be generated?");
+                            sequenceCheck = Int32.TryParse(Console.ReadLine(), out number);
+                            if (sequenceCheck)
                             {
-                                string seq = string.Empty;
-                                for (int j = 0; j < length; j++)
-                                    seq += alphabet.GetRandomLetter();
-
-                                var resR = new GameInstance(seq, alph, length);
-                                result.Add(resR);
-                                sw.WriteLine($"{alph}:{length}:{seq}");
-                            }
-                        }
-                        else if (number == 1)
-                        {
-                            string seq = string.Empty;
-                            for (int j = 0; j < length; j++)
-                                seq += alphabet.GetRandomLetter();
-                            var res = new GameInstance(seq, alph, length);
-
-                            Console.WriteLine("Would you like to repeat this instance? [y|n]");
-                            if (Console.ReadLine() == "y")
-                            {
-                                Console.WriteLine("How many times?");
-                                var times = Int32.Parse(Console.ReadLine());
-                                for (int i = 0; i < times; i++)
+                                if (number > 1)
                                 {
-                                    result.Add(res);
-                                    sw.WriteLine($"{alph}:{length}:{seq}");
+                                    for (int i = 0; i < number; i++)
+                                    {
+                                        string seq = string.Empty;
+                                        for (int j = 0; j < length; j++)
+                                            seq += alphabet.GetRandomLetter();
+
+                                        var resR = new GameInstance(seq, alph, length);
+                                        result.Add(resR);
+                                        sw.WriteLine($"{alph}:{length}:{seq}");
+                                    }
+                                }
+                                else if (number == 1)
+                                {
+                                    string seq = string.Empty;
+                                    for (int j = 0; j < length; j++)
+                                        seq += alphabet.GetRandomLetter();
+                                    var res = new GameInstance(seq, alph, length);
+
+                                    while(true)
+                                    {
+                                        Console.WriteLine("Would you like to repeat this instance? [y|n]");
+                                        var repeat = Console.ReadLine();
+                                        if (repeat == "y")
+                                        {
+                                            bool timesCheck = false;
+                                            while(!timesCheck)
+                                            {
+                                                int times = 0;
+                                                Console.WriteLine("How many times?");
+                                                timesCheck = Int32.TryParse(Console.ReadLine(), out times);
+                                                if (timesCheck)
+                                                {
+                                                    for (int i = 0; i < times; i++)
+                                                    {
+                                                        result.Add(res);
+                                                        sw.WriteLine($"{alph}:{length}:{seq}");
+                                                    }
+                                                }
+                                                else
+                                                    Console.WriteLine("Incorrect input - instance repeat number");
+                                            }
+                                            break;
+                                        }
+                                        else if (repeat == "n")
+                                            break;
+                                        else
+                                        {
+                                            Console.WriteLine("Incorrect input - instance repeat");
+                                            continue;
+                                        }
+                                    }
                                 }
                             }
+                            else
+                                Console.WriteLine("Incorrect input - number of sequences");
                         }
                     }
 
-                    Console.WriteLine("Would you like to finish generating? [y|n]");
-                    end = Console.ReadLine();
+                    while (true)
+                    {
+                        Console.WriteLine("Would you like to finish generating? [y|n]");
+                        end = Console.ReadLine();
+                        if (end == "y" || end == "n")
+                            break;
+                        else
+                        {
+                            Console.WriteLine("Incorrect input - generator finish");
+                            continue;
+                        }
+                    }
                 }
             }
             return result;

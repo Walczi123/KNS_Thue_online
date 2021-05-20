@@ -24,7 +24,7 @@ namespace GameTest
                 while ((line = sr.ReadLine()) != null)
                 {
                     var split = line.Split(':');
-                    //alphabetLength:wordLength:word
+                    //each line should be of the form -> alphabetLength:wordLength:word
                     results.Add(new GameInstance(split[2], Int32.Parse(split[0]), Int32.Parse(split[1])));
                 }
             }

@@ -12,7 +12,7 @@ namespace ThueOnline.Game
         string word = "";
         Alphabet alphabet;
         int limit;
-        int currentPosiotion = 0;
+        int currentPosition = 0;
         string inputSymbol = "_";
 
         IArtificialIntelligence AI;
@@ -35,7 +35,7 @@ namespace ThueOnline.Game
                 this.word.Length < this.limit)
             {
                 ComputerMove();
-                this.word = InsertSymbol(this.currentPosiotion, this.inputSymbol);
+                this.word = InsertSymbol(this.currentPosition, this.inputSymbol);
                 PrintWord();
                 PlayerMove();
                 PrintWord();
@@ -51,6 +51,35 @@ namespace ThueOnline.Game
             }
         }
 
+        public string StartTest(string input)
+        {
+            string order = "";
+            int moveCounter = 0;
+            int inputCounter = 0;
+            while (!this.IsRepetiton(this.word) &&
+                this.word.Length < this.limit)
+            {
+                moveCounter++;
+                ComputerMove();
+                this.word = InsertSymbol(this.currentPosition, this.inputSymbol);
+                order = order.Insert((1 + (int)Math.Floor(Math.Log10(this.currentPosition) + 1)) * this.currentPosition, $"{moveCounter},");
+                var letter = input[inputCounter++];
+                letter = Char.ToUpper(letter);
+                this.word = ReplaceSymbol(this.currentPosition, letter);
+            }
+            return order;
+        }
+
+        public Winner GetWinner()
+        {
+            return this.winner;
+        }
+
+        public string GetWord()
+        {
+            return this.word;
+        }
+
         #endregion
 
         #region Private Methods
@@ -61,7 +90,7 @@ namespace ThueOnline.Game
             {
                 var (firstPart, secondPart) = word.FindRepetition();
                 Console.WriteLine("Repetition found");
-                Console.WriteLine($"Frist: {firstPart}");
+                Console.WriteLine($"First: {firstPart}");
                 Console.WriteLine($"Second: {secondPart}");
                 this.winner = Winner.Computer;
                 return true;
@@ -91,12 +120,12 @@ namespace ThueOnline.Game
                     letter = line.ToCharArray()[0];
                 }
             }
-            this.word = ReplaceSymbol(this.currentPosiotion, letter);
+            this.word = ReplaceSymbol(this.currentPosition, letter);
         }
 
         private void ComputerMove()
         {
-            this.currentPosiotion = this.AI.MakeMove(word, alphabet, this.limit);
+            this.currentPosition = this.AI.MakeMove(word, alphabet, this.limit);
         }
 
         private string InsertSymbol(int position, string symbol)

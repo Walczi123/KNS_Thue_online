@@ -18,18 +18,18 @@ namespace ThueOnline
                 catch { Console.WriteLine("This is not a number. Choose again.\n"); continue; }
 
                 if (alphabetSize > 26) Console.WriteLine("It's too much. Choose again.\n");
-                else if (alphabetSize <1) Console.WriteLine("It's too little. Choose again.\n");
+                else if (alphabetSize < 1) Console.WriteLine("It's too little. Choose again.\n");
                 else break;
             }
 
             while(true){
-                Console.WriteLine("How long the word has to be?");
+                Console.WriteLine("How long should the word be?");
                 try { 
                     wordSize = Convert.ToInt32(Console.ReadLine()); 
                 }
                 catch { Console.WriteLine("This is not a number. Choose again.\n"); continue; }
 
-                if (wordSize <2) Console.WriteLine("It's too little. Choose again.\n");
+                if (wordSize < 2) Console.WriteLine("It's too short. Choose again.\n");
                 else break;
             }
             Console.WriteLine("\n\n");

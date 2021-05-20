@@ -35,5 +35,10 @@ namespace ThueOnline.Game
             Console.WriteLine();
         }
 
+        public char GetRandomLetter()
+        {
+            var rand = new Random();
+            return Letters[rand.Next() % Letters.Count];
+        }
     }
 }

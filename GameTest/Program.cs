@@ -9,7 +9,31 @@ namespace GameTest
     {
         static void Main(string[] args)
         {
-            var instances = FileHandler.ReadFile();
+            bool useGenerated = false;
+            var instances = new List<GameInstance>();
+
+            Console.WriteLine("Would you like to generate a new input file? [y|n]");
+            var gen = Console.ReadLine();
+            if(gen == "y")
+            {
+                var generated = InputGenerator.GenerateInput();
+                Console.WriteLine("Would you like to use the generated instances? [y|n]");
+                useGenerated = Console.ReadLine() == "y" ? true : false;
+
+                if (useGenerated)
+                {
+                    instances = generated;
+                }
+                else
+                {
+                    instances = FileHandler.ReadFile();
+                }
+            }
+            else
+            {
+                instances = FileHandler.ReadFile();
+            }
+
             var results = new List<GameResult>();
 
             int count = 0;

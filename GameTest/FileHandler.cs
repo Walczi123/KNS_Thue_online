@@ -68,6 +68,11 @@ namespace GameTest
         public int alphabetLength;
         public int wordLength;
 
+        public GameInstance()
+        {
+
+        }
+
         public GameInstance(string inp, int aLength, int wLength)
         {
             inputs = inp;
